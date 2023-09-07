@@ -27,6 +27,12 @@ class App extends Component {
       try {
         this.setState({ loading: true });
         const images = await fetchImages(this.state.query, this.state.page);
+        if (!images.hits.length) {
+          Notiflix.Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.'
+          );
+          return;
+        }
         this.setState({
           images: [...this.state.images, ...images.hits],
           total: images.totalHits,
@@ -82,6 +88,7 @@ class App extends Component {
             tags={this.state.modalImageAlt}
           />
         )}
+
         {this.state.total > this.state.images.length &&
           !this.state.loading &&
           this.state.images.length > 0 && (
