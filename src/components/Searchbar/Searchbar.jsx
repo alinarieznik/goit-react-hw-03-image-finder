@@ -1,5 +1,12 @@
 import { Component } from 'react';
 import Notiflix from 'notiflix';
+import { SiGooglebigquery } from 'react-icons/si';
+import {
+  StyledHeader,
+  StyledSearchForm,
+  StyledSearchButton,
+  StyledInput,
+} from './Searchbar.styled';
 
 class Searchbar extends Component {
   state = {
@@ -22,13 +29,12 @@ class Searchbar extends Component {
 
   render() {
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.handleSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
-          </button>
-          <input
-            className="input"
+      <StyledHeader>
+        <StyledSearchForm onSubmit={this.handleSubmit}>
+          <StyledSearchButton type="submit">
+            <SiGooglebigquery />
+          </StyledSearchButton>
+          <StyledInput
             type="text"
             autoComplete="off"
             autoFocus
@@ -36,8 +42,8 @@ class Searchbar extends Component {
             value={this.state.query}
             onChange={this.handleQueryChange}
           />
-        </form>
-      </header>
+        </StyledSearchForm>
+      </StyledHeader>
     );
   }
 }

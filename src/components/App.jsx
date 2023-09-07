@@ -3,9 +3,11 @@ import Searchbar from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
 import { Button } from './Button/Button';
-import { Modal } from './Modal/Modal';
-import { fetchImages } from '../api';
+import { Loader } from './Loader/Loader';
+import Modal from './Modal/Modal';
+import { fetchImages } from './api';
 import Notiflix from 'notiflix';
+import { StyledApp } from './App.styled';
 
 class App extends Component {
   state = {
@@ -15,34 +17,10 @@ class App extends Component {
     loading: false,
     error: null,
     total: 0,
+    showModal: false,
+    modalImage: null,
+    modalImageAlt: null,
   };
-
-  handleFormSubmit = query => {
-    console.log(query);
-    // evt.preventDefault();
-    // console.log(evt);
-    this.setState({
-      query: query,
-      images: [],
-      page: 1,
-    });
-  };
-
-  handleLoadMore = () => {
-    this.setState(pState => ({
-      page: pState.page + 1,
-    }));
-  };
-
-  // async componentDidMount() {
-  //   try {
-  //     const images = await fetchImages(this.state.query, this.state.page);
-  //     console.log(images.hits);
-  //     this.setState({ images: images.hits });
-  //   } catch (error) {
-  //     console.error('Error');
-  //   }
-  // }
 
   async componentDidUpdate(pProps, pState) {
     if (pState.query !== this.state.query || pState.page !== this.state.page) {
@@ -61,21 +39,55 @@ class App extends Component {
     }
   }
 
+  handleFormSubmit = query => {
+    this.setState({
+      query: query,
+      images: [],
+      page: 1,
+    });
+  };
+
+  handleLoadMore = () => {
+    this.setState(pState => ({
+      page: pState.page + 1,
+    }));
+  };
+
+  toggleModal = (largeImageURL, tags) => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      modalImage: largeImageURL,
+      modalImageAlt: tags,
+    }));
+  };
+
   render() {
     return (
-      <div>
+      <StyledApp>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {this.state.loading && <h1>Loading...</h1>}
         {this.state.error && Notiflix.Notify.warning('Sorry, try again')}
         {this.state.images.length > 0 && (
           <ImageGallery>
-            <ImageGalleryItem images={this.state.images} />
+            <ImageGalleryItem
+              images={this.state.images}
+              onClick={this.toggleModal}
+            />
           </ImageGallery>
         )}
-        {this.state.total > this.state.images.length && (
-          <Button onClick={this.handleLoadMore} />
+        {this.state.loading && <Loader />}
+        {this.state.showModal && (
+          <Modal
+            onClose={this.toggleModal}
+            largeImageURL={this.state.modalImage}
+            tags={this.state.modalImageAlt}
+          />
         )}
-      </div>
+        {this.state.total > this.state.images.length &&
+          !this.state.loading &&
+          this.state.images.length > 0 && (
+            <Button onClick={this.handleLoadMore} />
+          )}
+      </StyledApp>
     );
   }
 }
