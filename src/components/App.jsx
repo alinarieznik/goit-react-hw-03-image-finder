@@ -46,11 +46,13 @@ class App extends Component {
   }
 
   handleFormSubmit = query => {
-    this.setState({
-      query: query,
-      images: [],
-      page: 1,
-    });
+    if (this.state.query !== query) {
+      this.setState({
+        query: query,
+        images: [],
+        page: 1,
+      });
+    }
   };
 
   handleLoadMore = () => {

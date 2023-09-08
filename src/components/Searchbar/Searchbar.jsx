@@ -23,8 +23,9 @@ class Searchbar extends Component {
       Notiflix.Notify.warning('Please, fill the main field');
       return;
     }
+
     this.props.onSubmit(this.state.query);
-    this.setState({ query: '' });
+    // this.setState({ query: '' });
   };
 
   render() {
