@@ -73,7 +73,7 @@ class App extends Component {
     return (
       <StyledApp>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {this.state.error && Notiflix.Notify.warning('Sorry, try again')}
+        {this.state.error && !this.state.loading && <p>Sorry, try again</p>}
         {this.state.images.length > 0 && (
           <ImageGallery>
             <ImageGalleryItem
